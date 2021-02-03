@@ -11,8 +11,8 @@
    //따로 작성하지 않으면 다 퍼블릭
 
    class CoffeeMaker {
-      private static BEANS_GRAMM_PER_SHOT:number=7; //static ->class lever (메모리낭비줄이기)
-      private coffeeBeans: number = 0; //instance (object) lever
+      private static BEANS_GRAMM_PER_SHOT:number=7; //static ->class level (메모리낭비줄이기)
+      private coffeeBeans: number = 0; //instance (object) level
 
       private constructor(coffeeBeans:number) {
          this.coffeeBeans=coffeeBeans;
@@ -56,21 +56,30 @@
    console.log(maker);
 
    class User {
-      firstName: string;
-      lastName: string;
-      fullName: string;
-      constructor(firstName: string, lastName:string){
-         this.firstName =this.firstName;
-         this.lastName =this.lastName;
-         this.fullName =`${firstName} ${lastName}`;
-         
+      get fullName():string{
+         return `${this.firstName} ${this.lastName}`; 
+      }
+      private internalAge=4;
+      get age():number{
+         return this.internalAge;
+      }
+      set age(num:number){
+         //유효성검사
+         if(num<0){}
+         this.internalAge=num;
+      }
+      //constructor안에 private ->바로 멤버변수로 설정
+      constructor(private firstName: string, private lastName:string){
+         this.firstName =firstName;
+         this.lastName =lastName;
       }
    }
 
    const user = new User('Jelly', 'Fish');
    console.log(user.fullName);
-   user.firstName = "Belly";
-   console.log(user.fullName); //여전히 'Jelly Fish' - constructor에서 할당된 이후 변경안되서.
-   console.log(user.firstName);
+   // user.firstName = "Belly";
+   user.age=7; //set 호출
+   console.log(user.age);
+   console.log(user.fullName); //get fullName으로 바꾸고 업데이트 사항 반영
    
 }

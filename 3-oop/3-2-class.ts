@@ -8,8 +8,8 @@
    //오브젝트마다 새로만들어져야 하는 데이터가 있다면 멤버변수로 만들고
    //클래스레벨에서 함께 공유될 수 있다면 static 이용
    class CoffeeMaker {
-      static BEANS_GRAMM_PER_SHOT:number=7; //static ->class lever (메모리낭비줄이기)
-      coffeeBeans: number = 0; //instance (object) lever
+      static BEANS_GRAMM_PER_SHOT:number=7; //static ->class level (메모리낭비줄이기)
+      coffeeBeans: number = 0; //instance (object) level
 
       constructor(coffeeBeans:number) {
          this.coffeeBeans=coffeeBeans;
