@@ -53,6 +53,24 @@
    // static 값으로 변경해서 바로 접근할 수 없게하고, 커피빈 추가하는 메소드를 새로이 만들어 사용
    // maker.fillCoffeeBeans(-5);
    maker.fillCoffeeBeans(5);
-
    console.log(maker);
+
+   class User {
+      firstName: string;
+      lastName: string;
+      fullName: string;
+      constructor(firstName: string, lastName:string){
+         this.firstName =this.firstName;
+         this.lastName =this.lastName;
+         this.fullName =`${firstName} ${lastName}`;
+         
+      }
+   }
+
+   const user = new User('Jelly', 'Fish');
+   console.log(user.fullName);
+   user.firstName = "Belly";
+   console.log(user.fullName); //여전히 'Jelly Fish' - constructor에서 할당된 이후 변경안되서.
+   console.log(user.firstName);
+   
 }
