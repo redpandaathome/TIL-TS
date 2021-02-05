@@ -73,8 +73,8 @@
    interface SugarProvider {
       addSugar(cup:CoffeeCup):CoffeeCup;
    }
-   //싸구려 우유 거품기
-   class CheapMilkSteamier {
+   //싸구려 우유 거품기(class CheapMilkSteamier {})=> +인터페이스 
+   class CheapMilkSteamier implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some milk... 🥛');
       }
@@ -87,10 +87,53 @@
       }
    }
 
-   //설탕 제조기
-   class CandySugarMixer {
+   //✨고오급 우유 거품기! (new)
+   class FancyMilkSteamier implements MilkFrother{
+      private steamMilk(): void{
+         console.log('steaming some FANCY milk... ✨🥛');
+      }
+      makeMilk(cup:CoffeeCup):CoffeeCup{
+         this.steamMilk();
+         return {
+            ...cup,
+            hasMilk:true,
+         }
+      }
+   }
+
+   //✨🧊고오급 우유 거품기2 (new)
+   class ColdMilkSteamier implements MilkFrother{
+      private steamMilk(): void{
+         console.log('steaming some FANCY COLD milk... ✨🧊🥛');
+      }
+      makeMilk(cup:CoffeeCup):CoffeeCup{
+         this.steamMilk();
+         return {
+            ...cup,
+            hasMilk:true,
+         }
+      }
+   }
+
+   //설탕 제조기(class CandySugarMixer {}) => +인터페이스
+   class CandySugarMixer implements SugarProvider{
       private getSugar(){
-         console.log("getting some sugar from jar...🍯");
+         console.log("getting some sugar from cheap candy...🍭");
+         return true;
+      }
+      addSugar(cup:CoffeeCup):CoffeeCup{
+         const sugar = this.getSugar()
+         return {
+            ...cup,
+            hasSugar:sugar,
+         }
+      }
+   }
+
+   //✨Fancy 설탕 제조기(class CandySugarMixer {}) => +인터페이스
+   class SugarMixer implements SugarProvider{
+      private getSugar(){
+         console.log("getting some FANCY sugar from jar...🍯");
          return true;
       }
       addSugar(cup:CoffeeCup):CoffeeCup{
@@ -108,7 +151,9 @@
       constructor(
          beans: number, 
          public readonly serialNumber:string, 
-         private milkFrother:CheapMilkSteamier
+         // private milkFrother:CheapMilkSteamier 
+         //클래스간 coupling->클래스-인터페이스로 decoupling : 코드재사용 극대화!
+         private milkFrother:MilkFrother
       ) {
          super(beans);
          this.serialNumber = serialNumber;
@@ -132,7 +177,9 @@
    class SweetCoffeeMaker extends CoffeeMachine {
       constructor(
          beans:number, 
-         private sugar:CandySugarMixer
+         // private sugar:CandySugarMixer 클래스말고 인터페이스 받아오자
+         private sugar:SugarProvider
+
       ){
          super(beans)
       }
@@ -159,8 +206,10 @@
    class SweetCoffeeLatteMaker extends CoffeeMachine{
       constructor(
          private beans:number, 
-         private milk:CheapMilkSteamier, 
-         private sugar:CandySugarMixer){
+         // private milk:CheapMilkSteamier, 클래스말고 인터페이스로 받아오자.
+         // private sugar:CandySugarMixer,
+         private milk:MilkFrother,
+         private sugar:SugarProvider){
             super(beans);
          }
       makeCoffee(shots:number):CoffeeCup{
@@ -172,16 +221,38 @@
 
    }
 
+   // const cheapMilkMaker = new CheapMilkSteamier()
+   // const candySugar = new CandySugarMixer()
+   // const sweetMachine = new SweetCoffeeMaker(12, candySugar)
+   // const latteeMachine = new CoffeelatteMachine(12, '0415', cheapMilkMaker);
+   // const SweetCoffeeLatteMachine = new SweetCoffeeLatteMaker(
+   //    12,
+   //    cheapMilkMaker,
+   //    candySugar
+   // )
+   //재사용성이 떨어진다? 우유, 설탕 한종류만 가능가능
+   //클래스 간에 상호작용을 할 때, 클래스 자신을 노출하는게 아니라, 계약서(인터페이스)통해서 상호작용해야. decoupling의 원칙
+   //이제 각각의 인터페이스를 만들어보자
+
+   //필요한 기능을 인터페이스를 통해 각각 클래스로 구현해서, 용도에 맞게 부품을 바꿔끼울 수 있게 됌.
+   //Milk
    const cheapMilkMaker = new CheapMilkSteamier()
+   const fancyMilkMaker = new FancyMilkSteamier()
+   const coldMilkMaker = new ColdMilkSteamier()
+   //Sugar
    const candySugar = new CandySugarMixer()
-   const sweetMachine = new SweetCoffeeMaker(12, candySugar)
+   const sugar = new SugarMixer()
+   
+   
+   //
+   const sweetCandyMachine = new SweetCoffeeMaker(12, candySugar)
+   const sweetMachine = new SweetCoffeeMaker(12, sugar)
+
    const latteeMachine = new CoffeelatteMachine(12, '0415', cheapMilkMaker);
+   const coldLatteeMachine = new CoffeelatteMachine(12, '0415', coldMilkMaker);
    const SweetCoffeeLatteMachine = new SweetCoffeeLatteMaker(
       12,
       cheapMilkMaker,
       candySugar
    )
-   //재사용성이 떨어진다? 우유, 설탕 한종류만 가능가능
-   //클래스 간에 상호작용을 할 때, 클래스 자신을 노출하는게 아니라, 계약서(인터페이스)통해서 상호작용해야. decoupling의 원칙
-   //이제 각각의 인터페이스를 만들어보자
 }
