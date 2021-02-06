@@ -56,6 +56,14 @@
    console.log(maker);
 
    class User {
+      // firstName: string;
+      // lastName: string;
+      // fullName: string;
+      // constructor(firstName: string, lastName: string){
+      //    this.firstName = firstName;
+      //    this.lastName = lastName;
+      //    this.fullName = `${firstName} ${lastName}`
+      // }
       get fullName():string{
          return `${this.firstName} ${this.lastName}`; 
       }
@@ -76,8 +84,11 @@
    }
 
    const user = new User('Jelly', 'Fish');
+   console.log(`user: ${user}`)
    console.log(user.fullName);
-   // user.firstName = "Belly";
+   // user.firstName = "Belly"; =>여전히 Jelly Fish로 나온다.
+   // constructor에서 this.fullName = `${firstName} ${lastName}` 로 설정된 이후로 변경되지 않음=>getter를 쓰면 해결
+   
    user.age=7; //set 호출
    console.log(user.age);
    console.log(user.fullName); //get fullName으로 바꾸고 업데이트 사항 반영

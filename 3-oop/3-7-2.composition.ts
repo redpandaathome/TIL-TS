@@ -13,6 +13,7 @@
       private static BEANS_GRAMM_PER_SHOT:number=7;
       private coffeeBeans: number = 0;
 
+      //✨Milk, sugar 추가됌!
       public constructor(
          coffeeBeans:number, 
          private milk:MilkFrother, 
@@ -60,6 +61,7 @@
          this.grindBeans(shots);
          this.preheat();
          const coffee = this.extract(shots);
+         //✨✨
          const sugarAdded = this.sugar.addSugar(coffee);
          return this.milk.makeMilk(sugarAdded);
 
@@ -73,8 +75,8 @@
    interface SugarProvider {
       addSugar(cup:CoffeeCup):CoffeeCup;
    }
-   //싸구려 우유 거품기(class CheapMilkSteamier {})=> +인터페이스 
-   class CheapMilkSteamier implements MilkFrother{
+   //싸구려 우유 거품기(class CheapMilkSteamer {})=> +인터페이스 
+   class CheapMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some milk... 🥛');
       }
@@ -88,7 +90,7 @@
    }
 
    //✨고오급 우유 거품기! (new)
-   class FancyMilkSteamier implements MilkFrother{
+   class FancyMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some FANCY milk... ✨🥛');
       }
@@ -102,7 +104,7 @@
    }
 
    //✨🧊고오급 우유 거품기2 (new)
-   class ColdMilkSteamier implements MilkFrother{
+   class ColdMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some FANCY COLD milk... ✨🧊🥛');
       }
@@ -165,9 +167,9 @@
    //컴포지션으로 대체해서 조금 더 확장이 가능하고/재사용성이 높고/유지보수가 쉽고/고퀄이 가능한 방법을 생각해보자.
    //그래도 over-engineering 하지마라는 점은 유의! (일정이 먼저 - 중간점을 지키자!)
    //Milk
-   const cheapMilkMaker = new CheapMilkSteamier()
-   const fancyMilkMaker = new FancyMilkSteamier()
-   const coldMilkMaker = new ColdMilkSteamier()
+   const cheapMilkMaker = new CheapMilkSteamer()
+   const fancyMilkMaker = new FancyMilkSteamer()
+   const coldMilkMaker = new ColdMilkSteamer()
    const noMilk = new NoMilk()
    //Sugar
    const candySugar = new CandySugarMixer()
@@ -175,7 +177,7 @@
    const noSugar = new NoSugar()
    
    
-   //
+   // ✨이제 CoffeeMachine 으로 다양한 커피를 다 만든다!
    const sweetCandyMachine = new CoffeeMachine(14, noMilk, candySugar)
    const sweetMachine = new CoffeeMachine(12, cheapMilkMaker, sugar)
 

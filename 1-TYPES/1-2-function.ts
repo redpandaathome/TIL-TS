@@ -26,7 +26,7 @@
    // }
 
    //JS ✨ => TS
-   //Optional Parameter - undefined를 전달하지 않아도 된다.
+   //❓❔Optional Parameter - undefined를 전달하지 않아도 된다.
    function printName(firstName:string, lastName?:string){
       console.log(firstName);
       console.log(lastName); //undefined

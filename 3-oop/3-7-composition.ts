@@ -67,14 +67,14 @@
    }
 
    interface MilkFrother {
-      makeMilk(cup:CoffeeCup): CoffeeCup;
+      makeMilk(cup:CoffeeCup):CoffeeCup;
    }
 
    interface SugarProvider {
       addSugar(cup:CoffeeCup):CoffeeCup;
    }
-   //싸구려 우유 거품기(class CheapMilkSteamier {})=> +인터페이스 
-   class CheapMilkSteamier implements MilkFrother{
+   //싸구려 우유 거품기(class CheapMilkSteamer {}) => +✨인터페이스 
+   class CheapMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some milk... 🥛');
       }
@@ -88,7 +88,7 @@
    }
 
    //✨고오급 우유 거품기! (new)
-   class FancyMilkSteamier implements MilkFrother{
+   class FancyMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some FANCY milk... ✨🥛');
       }
@@ -102,7 +102,7 @@
    }
 
    //✨🧊고오급 우유 거품기2 (new)
-   class ColdMilkSteamier implements MilkFrother{
+   class ColdMilkSteamer implements MilkFrother{
       private steamMilk(): void{
          console.log('steaming some FANCY COLD milk... ✨🧊🥛');
       }
@@ -145,14 +145,15 @@
       }
    }
 
-   //상속 🥛+☕️=💜
+   //상속 🥛+☕️=💜 
    class CoffeelatteMachine extends CoffeeMachine {
       //따로 생성자를 만들고 싶다면, 부모의 생성자도 호출해줘야.
       constructor(
          beans: number, 
          public readonly serialNumber:string, 
-         // private milkFrother:CheapMilkSteamier 
-         //클래스간 coupling->클래스-인터페이스로 decoupling : 코드재사용 극대화!
+         // private milkFrother:CheapMilkSteamer 
+         // +✨milkFrother 인터페이스
+         //클래스간 coupling -> 클래스-인터페이스로 decoupling : 코드재사용 극대화!
          private milkFrother:MilkFrother
       ) {
          super(beans);
@@ -177,7 +178,7 @@
    class SweetCoffeeMaker extends CoffeeMachine {
       constructor(
          beans:number, 
-         // private sugar:CandySugarMixer 클래스말고 인터페이스 받아오자
+         // private sugar:CandySugarMixer 클래스말고 인터페이스 받아오자✨
          private sugar:SugarProvider
 
       ){
@@ -199,14 +200,14 @@
    
    //우유, 설탕을 어디서 만드는지 전혀 신경쓰지 않는다
    //컴포지션... 필요기능 가져와서 외부에서 주입하여 "재사용"성을 높여준다!
-   //단점은 class CandySugarMixer, CheapMilkSteamer와 밀접하게 coupling이 되어있다.
+   //단점은 class CandySugarMixer, CheapMilkSteamer 와 밀접하게 coupling이 되어있다.
    //이후 더 나은 우유스티머를 도입시 모두 업데이트 되어야하고(해당 클래스를 가져다 쓰는 클래스들이 다 맞춰서 변경되어야) 
    //또한 현재로써는 constructor에 싸구려 우유, 설탕으로 제약됨
    //클래스들 간에 서로 밀접하게 관계 짓는 건 좋지 않다. =>어떻게 개선할까???
    class SweetCoffeeLatteMaker extends CoffeeMachine{
       constructor(
          private beans:number, 
-         // private milk:CheapMilkSteamier, 클래스말고 인터페이스로 받아오자.
+         // private milk:CheapMilkSteamer, 클래스말고 인터페이스로 받아오자.
          // private sugar:CandySugarMixer,
          private milk:MilkFrother,
          private sugar:SugarProvider){
@@ -221,7 +222,7 @@
 
    }
 
-   // const cheapMilkMaker = new CheapMilkSteamier()
+   // const cheapMilkMaker = new CheapMilkSteamer()
    // const candySugar = new CandySugarMixer()
    // const sweetMachine = new SweetCoffeeMaker(12, candySugar)
    // const latteeMachine = new CoffeelatteMachine(12, '0415', cheapMilkMaker);
@@ -236,9 +237,9 @@
 
    //필요한 기능을 인터페이스를 통해 각각 클래스로 구현해서, 용도에 맞게 부품을 바꿔끼울 수 있게 됌.
    //Milk
-   const cheapMilkMaker = new CheapMilkSteamier()
-   const fancyMilkMaker = new FancyMilkSteamier()
-   const coldMilkMaker = new ColdMilkSteamier()
+   const cheapMilkMaker = new CheapMilkSteamer()
+   const fancyMilkMaker = new FancyMilkSteamer()
+   const coldMilkMaker = new ColdMilkSteamer()
    //Sugar
    const candySugar = new CandySugarMixer()
    const sugar = new SugarMixer()

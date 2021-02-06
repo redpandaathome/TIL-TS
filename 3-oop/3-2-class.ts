@@ -36,7 +36,7 @@
    console.log(maker)
    const maker2 = new CoffeeMaker(15);
    console.log(maker2)
-   // console.log(maker.makeCoffee(2))
+   console.log(maker.makeCoffee(2))
 
    const maker3 = CoffeeMaker.makeMachine(3);
 
