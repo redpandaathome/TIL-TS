@@ -54,3 +54,6 @@ type Person = {
 type Name = Person['name']; // string
 type NumberType = number;
 type Direction = 'left' | 'right' //union type
+
+//interface - 규격사항: (정해진 인터페이스를 통해 서로간의 상호작용)
+//type 데이터를 담는 타입을 정의. (데이터를 담는 목적)
