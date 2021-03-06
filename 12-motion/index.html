@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Motion</title>
+   <script src="./build/main.js"></script>
+   <link rel="stylesheet" href="style/index.css">
+</head>
+<body>
+   <div id="menu">
+      <h1>Motion</h1>
+      <span id="menu-tap">
+         <input type="button" value="image" onclick="openImageForm()"/> 
+         <input type="button" value="video"/>
+         <input type="button" value="note"/> 
+         <input type="button" value="task"/>
+      </span>
+      
+   </div>
+   <div id="content">
+      <form id="form-content">
+         <div>
+           <label for="title">Title</label>
+           <input id="title" type="text" name="title">
+         </div>
+         <div>
+            <label for="url">URL</label>
+            <input id="url" type="text" name="url">
+          </div>
+         <div>
+           <input type="submit" value="Add" onclick="submitImage()">
+         </div>
+       </form>
+   </div>
+</body>
+</html>

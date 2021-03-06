@@ -3,36 +3,19 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Basic Options */
-    
-    // 수정사항만 반영해서 컴파일 -> 예전 컴파일정보 disc에 보관 ->저장공간 차지 (프로젝트 규모별 상이)
     // "incremental": true,                   /* Enable incremental compilation */
-    
     "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-    
-    // node->commonjs, browser->ES
-    "module": "commonjs",                     /* Sptecify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+    "module": "ES2015",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     // "lib": [],                             /* Specify library files to be included in the compilation. */
-    
-    // 한프로젝트내에서 js, ts 섞어쓴다면 밑에 둘은 true가 좋을 것
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
-    
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
-    
-    // ✨true=> .map 파일 생성 (ts-js 연결정보 - 디버깅 용이) //브라우저환경 source->page 가보면 src 폴더안에 ts파일 확인가능 
-    "sourceMap": true,                     /* Generates corresponding '.map' file. */
+    // "sourceMap": true,                     /* Generates corresponding '.map' file. */
     // "outFile": "./",                       /* Concatenate and emit output to single file. */
-    
-    // ✨tsc -> js 파일 생성위치
-    // "outDir": "./",                        /* Redirect output structure to the directory. */
     "outDir": "./build",                        /* Redirect output structure to the directory. */
-    
-    // ✨ts 생성 최상위 폴더 선택(index src 꼬이지 않게) =>root는 src디렉토리다!
-    // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     "rootDir": "./src",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
     // "removeComments": true,                /* Do not emit comments to output. */
@@ -83,8 +66,5 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
-  },
-  "exclude": ["./src/dev.ts"]
-  // "include": ["./src/dev.ts"]
-
+  }
 }

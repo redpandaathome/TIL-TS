@@ -1,0 +1,39 @@
+*{
+   margin: 0px;
+   padding: 0px;
+}
+
+body {
+   background-image: url("../assets/cool-background.png");
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-color: black;
+   width: 100vw;
+   height: 100vh;
+
+}
+
+#menu {
+ background-color: gray;
+ text-align:  center;
+}
+
+#form-content {
+   display: none;
+   background-color: rgba(135, 206, 235, 0.5);
+   position: absolute;
+   width: 100vw;
+   height: 100vh;
+
+   top:0px;
+ text-align:  center;
+
+ padding-top: 10vw;
+ 
+}
+
+h1 {
+   color: red;
+   /* align-content: center; */
+
+}
