@@ -11,8 +11,9 @@
    //따로 작성하지 않으면 다 퍼블릭
 
    class CoffeeMaker {
-      private static BEANS_GRAMM_PER_SHOT:number=7; //static ->class level (메모리낭비줄이기)
-      private coffeeBeans: number = 0; //instance (object) level
+      private static BEANS_GRAMM_PER_SHOT:number=7;
+      // ✨private!
+      private coffeeBeans: number = 0;
 
       private constructor(coffeeBeans:number) {
          this.coffeeBeans=coffeeBeans;
@@ -50,7 +51,7 @@
 
    // maker.coffeeBeans = -10; //invalid 
    //- 제약사항이 없어서 외부에서 나의 오브젝트 상태를 유효하지 않은 상태로 만들 수 있는 위험
-   // static 값으로 변경해서 바로 접근할 수 없게하고, 커피빈 추가하는 메소드를 새로이 만들어 사용
+   // private 값으로 변경해서 바로 접근할 수 없게하고, 커피빈 추가하는 메소드를 새로이 만들어 사용
    // maker.fillCoffeeBeans(-5);
    maker.fillCoffeeBeans(5);
    console.log(maker);
@@ -76,7 +77,7 @@
          if(num<0){}
          this.internalAge=num;
       }
-      //constructor안에 private ->바로 멤버변수로 설정
+      // ✨constructor안에 private ->바로 멤버변수로 설정
       constructor(private firstName: string, private lastName:string){
          this.firstName =firstName;
          this.lastName =lastName;

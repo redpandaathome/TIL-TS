@@ -8,7 +8,9 @@
          console.log(`full time`)
       }
 
-      workFullTime(){}
+      workFullTime(){
+         console.log(`working full time...! 🏃🏻‍♀️`)
+      }
    }
 
    class PartTimeEmployee implements Employee {
@@ -40,9 +42,15 @@
    // const bobAfterPay = pay(bob);
    // ellieAfterPay.pay ... pay밖에 없음! workFullTime 없다.
    // 세부 클래스정보를 잃어버림. 풀타임워커가 확실하다면 캐스팅(as...) -> 좋지 않다.->제네릭을 쓰자!
-   const ellieAfterPay = payBad(elli) as FullTimeEmployee;
-   const bobAfterPay = payBad(bob) as PartTimeEmployee;
+   const ellieAfterBadPay = payBad(elli) as FullTimeEmployee;
+   const bobAfterBadPay = payBad(bob) as PartTimeEmployee;
+   ellieAfterBadPay.workFullTime();
+
+   console.log("...Generic test!")
+   const ellieAfterPay = pay(elli);
+   const bobAfterPay = pay(bob);
    ellieAfterPay.workFullTime();
+
 
    //연습2
    const obj = {
