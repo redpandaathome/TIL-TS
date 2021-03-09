@@ -59,43 +59,92 @@
       }
    }
 
-   //상속 🥛+☕️=💜
-   class CoffeelatteMachine extends CoffeeMachine {
-      //따로 생성자를 만들고 싶다면, 부모의 생성자도 호출해줘야.
-      constructor(beans: number, public readonly serialNumber:string){
-         super(beans);
-         this.serialNumber = serialNumber;
+   // ✨기존 클래스안에서 우리가 필요한 걸 구현하는게 아니라, 새로운 클래스 만들어서 기존 클래스 생성자에 주입!
+   // ✨싸구려 우유 거품기!
+   class CheapMilkSteamer {
+      private steamMilk():void {
+         console.log(`Steaming some milk...🥛`);
       }
-
-      private steamMilk(): void{
-         console.log('steaming some milk... 🥛');
-      }
-      makeCoffee(shots:number):CoffeeCup{
-         //super->부모클래스의 함수를 호출/접근 가능!
-         const coffee = super.makeCoffee(shots);
+      makeMilk(cup:CoffeeCup):CoffeeCup{
          this.steamMilk();
          return {
-            ...coffee,
+            ...cup,
             hasMilk: true,
          }
       }
    }
 
-   class SweetCoffeeMaker extends CoffeeMachine {
-      makeCoffee(shots:number):CoffeeCup{
-         // ✨ super.~
-         const coffee = super.makeCoffee(shots);
+   // ✨설탕제조기
+   class AutomaticSugarMixer {
+      private getSugar():boolean{
+         console.log(`Gettig some sugar from jar...🍭`);
+         return true;
+      }
+      addSugar(cup:CoffeeCup):CoffeeCup{
+         const sugar = this.getSugar();
          return {
-            ...coffee,
-            hasSugar:true
+            ...cup,
+            hasSugar: sugar,
          }
       }
    }
+
+   //상속 🥛+☕️=💜
+   class CoffeelatteMachine extends CoffeeMachine {
+      //따로 생성자를 만들고 싶다면, 부모의 생성자도 호출해줘야.
+      constructor(
+         beans: number, 
+         public readonly serialNumber:string, 
+         //✨
+         private milkFrother:CheapMilkSteamer
+      ) {
+         super(beans);
+         this.serialNumber = serialNumber;
+      }
+
+      // private steamMilk(): void{
+      //    console.log('steaming some milk... 🥛');
+      // }
+
+      makeCoffee(shots:number):CoffeeCup{
+
+         const coffee = super.makeCoffee(shots);
+         
+         // this.steamMilk();
+         // return {
+         //    ...coffee,
+         //    hasMilk: true,
+         // }
+      
+         // ✨
+         return this.milkFrother.makeMilk(coffee);
+      }
+   }
+
+   class SweetCoffeeMaker extends CoffeeMachine {
+
+      constructor(
+         beans: number, 
+         // ✨ 멤버변수화
+         private sugar:AutomaticSugarMixer,
+      ) {
+         super(beans);
+      }
+
+      makeCoffee(shots:number):CoffeeCup{
+         const coffee = super.makeCoffee(shots);
+         // return {
+         //    ...coffee,
+         //    hasSugar:true
+         // }
+         
+         //✨
+         return this.sugar.addSugar(coffee);
+      }
+   }
    
-   //polymorphism->한가지 클래스나 인터페이스를 이용해서 다른 방식으로 구현한 클래스를 만들 수 있다.
-   //(인터페이스나 부모클래스를 상속한) 자식클래스들이 (인터페이스, 부모클래스의 함수)를 다른 방식으로 다양하게 구성할 수 있다.
-   //사용자도 간편하게 기능 이용(인터페이스에 정의된대로)
-   // const machines: CoffeeMaker[] = [~] 로 바꾸면, makeCoffee만 사용가능(유일한 인터페이스)
+   class SweetCaffeeLatteMachine extends CoffeeMachine {}
+
    const machines = [
       new CoffeeMachine(16),
       new CoffeelatteMachine(16, '0415'),
