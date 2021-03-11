@@ -59,11 +59,17 @@
       }
    }
 
-   // ✨기존 클래스안에서 우리가 필요한 걸 구현하는게 아니라, 
-   // 각각의 기능별로 새로운 클래스 만들어서 필요한 곳에서 컴포지션
+   // ✨ 클래스간 소통이 필요할 땐 인터페이스를 통하자 (decoupling)
+   interface MilkFrother {
+      makeMilk(cup:CoffeeCup): CoffeeCup;
+   }
+
+   interface SugarProvider {
+      addSugar(cup:CoffeeCup):CoffeeCup;
+   }
 
    // ✨싸구려 우유 거품기!
-   class CheapMilkSteamer {
+   class CheapMilkSteamer implements MilkFrother{
       private steamMilk():void {
          console.log(`Steaming some milk...🥛`);
       }
@@ -76,18 +82,75 @@
       }
    }
 
-   // ✨설탕제조기
-   class AutomaticSugarMixer {
-      private getSugar():boolean{
-         console.log(`Gettig some sugar from jar...🍭`);
+   //✨고오급 우유 거품기! (new)
+   class FancyMilkSteamer implements MilkFrother{
+      private steamMilk(): void{
+         console.log('steaming some FANCY milk... ✨🥛');
+      }
+      makeMilk(cup:CoffeeCup):CoffeeCup{
+         this.steamMilk();
+         return {
+            ...cup,
+            hasMilk:true,
+         }
+      }
+   }
+
+   //✨🧊고오급 우유 거품기2 (new)
+   class ColdMilkSteamer implements MilkFrother{
+      private steamMilk(): void{
+         console.log('steaming some FANCY COLD milk... ✨🧊🥛');
+      }
+      makeMilk(cup:CoffeeCup):CoffeeCup{
+         this.steamMilk();
+         return {
+            ...cup,
+            hasMilk:true,
+         }
+      }
+   }
+
+   //🤮
+   class NoMilk implements MilkFrother{
+      makeMilk(cup:CoffeeCup):CoffeeCup{
+         return cup;
+      }
+   }
+
+   //설탕 제조기(class CandySugarMixer {}) => +인터페이스
+   class CandySugarMixer implements SugarProvider{
+      private getSugar(){
+         console.log("getting some sugar from cheap candy...🍭");
          return true;
       }
       addSugar(cup:CoffeeCup):CoffeeCup{
-         const sugar = this.getSugar();
+         const sugar = this.getSugar()
          return {
             ...cup,
-            hasSugar: sugar,
+            hasSugar:sugar,
          }
+      }
+   }
+
+   //✨Fancy 설탕 제조기(class CandySugarMixer {}) => +인터페이스
+   class SugarMixer implements SugarProvider{
+      private getSugar(){
+         console.log("getting some FANCY sugar from jar...🍯");
+         return true;
+      }
+      addSugar(cup:CoffeeCup):CoffeeCup{
+         const sugar = this.getSugar()
+         return {
+            ...cup,
+            hasSugar:sugar,
+         }
+      }
+   }
+
+   //🧘🏻‍♀️
+   class NoSugar implements SugarProvider{
+      addSugar(cup:CoffeeCup):CoffeeCup{
+         return cup;
       }
    }
 
@@ -97,50 +160,31 @@
       constructor(
          beans: number, 
          public readonly serialNumber:string, 
-         //✨
-         private milkFrother:CheapMilkSteamer
+         //✨ 클래스(CheapMilkSteamer)->인터페이스(MilkFrother)
+         private milkFrother:MilkFrother
       ) {
          super(beans);
          this.serialNumber = serialNumber;
       }
 
-      // private steamMilk(): void{
-      //    console.log('steaming some milk... 🥛');
-      // }
-
       makeCoffee(shots:number):CoffeeCup{
 
          const coffee = super.makeCoffee(shots);
-         
-         // this.steamMilk();
-         // return {
-         //    ...coffee,
-         //    hasMilk: true,
-         // }
-      
-         // ✨
          return this.milkFrother.makeMilk(coffee);
       }
    }
 
    class SweetCoffeeMaker extends CoffeeMachine {
-
       constructor(
          beans: number, 
-         // ✨ 멤버변수화
-         private sugar:AutomaticSugarMixer,
+         // ✨ (CandySugarMixer(C)->SugarProvider(I))
+         private sugar:SugarProvider,
       ) {
          super(beans);
       }
 
       makeCoffee(shots:number):CoffeeCup{
          const coffee = super.makeCoffee(shots);
-         // return {
-         //    ...coffee,
-         //    hasSugar:true
-         // }
-         
-         //✨
          return this.sugar.addSugar(coffee);
       }
    }
@@ -149,13 +193,9 @@
    class SweetCaffeeLatteMachine extends CoffeeMachine {
       constructor(
          private beans:number,
-         //✨ 이렇게 필요한 기능으 외부에서 가져와 주입->재사용
-         // 단점. tight coupling between (SweetCafeeLatteMachine)-(AutomaticSugarMixer, CheapMilkSteamer)
-         // with different milksteamer or sugarmixer later => every class should be updated
-         // and for now this class can only make coffee with cheap milk and candy sugar
-         // !!! tight coupling betwen classes are not recommended
-         private sugar:AutomaticSugarMixer,
-         private milk:CheapMilkSteamer,
+         //✨ 
+         private sugar:SugarProvider,
+         private milk:MilkFrother,
       ) {
          super(beans);
       }
@@ -167,20 +207,19 @@
       }
    }
 
-   // ✨ problem... CoffeelatteeMachine - only cheapMilk... no other milk (😭)
-   // if classes are interacting each other like this, it's better to let them interact through interfaces : decoupling
-   const cheapMilk = new CheapMilkSteamer();
-   const candySugar = new AutomaticSugarMixer();
+   // ✨ 
+   const cheapMilkMaker = new CheapMilkSteamer();
+   const fancyMilkMaker = new FancyMilkSteamer();
+   const coldMilkMaker = new ColdMilkSteamer();
 
-   const machines = [
-      new CoffeeMachine(16),
-      new CoffeelatteMachine(16, '0415', cheapMilk),
-      new SweetCoffeeMaker(16, candySugar),
-      new SweetCaffeeLatteMachine(16, candySugar, cheapMilk)
-   ]
+   const candySugar = new CandySugarMixer();
+   const sugar = new SugarMixer();
 
-   machines.forEach(machine=>{
-      console.log('-----------------')
-      machine.makeCoffee(1);
-   })
+
+   const coffeeMachine = new CoffeeMachine(16);
+   const cheapLatteeMachin = new CoffeelatteMachine(16, '0415', cheapMilkMaker);
+   const sweetMachine = new SweetCoffeeMaker(16, candySugar);
+   const sweetLatteMachine = new SweetCaffeeLatteMachine(16, candySugar, cheapMilkMaker);
+   
+
 }

@@ -8,6 +8,7 @@
    interface CoffeeMaker {
       makeCoffee(shots:number):CoffeeCup;
    }
+   // no more CoffeeLatteeMachine, SweetCofeeMachine, SweetCoffeeLateeMachine...! 
    //인터페이스구현
    class CoffeeMachine implements CoffeeMaker {
       private static BEANS_GRAMM_PER_SHOT:number=7;

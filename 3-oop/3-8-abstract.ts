@@ -19,7 +19,7 @@
          this.coffeeBeans=coffeeBeans;
       }
 
-      // abstrct class라 불가!
+      // abstrct class라 불가! abstract class의 instance는 만들 수 없다.
       // static makeMachine(coffeeBeans:number):CoffeeMachine{
       //    return new CoffeeMachine(coffeeBeans);
       // }
@@ -87,6 +87,7 @@
       //    //    ...this.coffeeBeans,
       //    //    hasMilk: true,
       //    // }
+
       //    return {
       //       shots,
       //       hasMilk: true,
