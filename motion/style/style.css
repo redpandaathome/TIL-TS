@@ -88,6 +88,8 @@ body {
 
 .document {
    height: 100%;
+   /* scroll */
+   overflow-y: auto;
    background-color: var(--document-bg-color);
    /* firefox */
    scrollbar-width: 6px;
