@@ -1,6 +1,6 @@
 import { BaseComponent, Component } from "../component.js";
 
-interface Composable {
+export interface Composable {
    addChild(child:Component):void
 }
 export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable {
