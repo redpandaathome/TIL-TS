@@ -12,7 +12,7 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
    addChild(section:Component){
       const item = new PageItemComponent();
       item.addChild(section)
-      item.attachTo(this.element);
+      item.attachTo(this.element, 'beforeend');
    }
 }
 
