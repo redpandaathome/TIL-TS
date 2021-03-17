@@ -7,32 +7,24 @@
    <title>Motion</title>
    <script src="./build/main.js"></script>
    <link rel="stylesheet" href="style/index.css">
+   <script type="module" src="./dist/app.js" defer></script>
 </head>
 <body>
-   <div id="menu">
-      <h1>Motion</h1>
-      <span id="menu-tap">
-         <input type="button" value="image" onclick="openImageForm()"/> 
-         <input type="button" value="video"/>
-         <input type="button" value="note"/> 
-         <input type="button" value="task"/>
-      </span>
-      
-   </div>
-   <div id="content">
-      <form id="form-content">
-         <div>
-           <label for="title">Title</label>
-           <input id="title" type="text" name="title">
-         </div>
-         <div>
-            <label for="url">URL</label>
-            <input id="url" type="text" name="url">
-          </div>
-         <div>
-           <input type="submit" value="Add" onclick="submitImage()">
-         </div>
-       </form>
+   <div class="app">
+      <header class="banner">
+         <h1 class="banner__title">Motion</h1>
+         <ul class="control-panel">
+            <li><button id="new-image" class="create-button">Image</button></li>
+            <li><button id="new-video" class="create-button">Video</button></li>
+            <li><button id="new-note" class="create-button">Note</button></li>
+            <li><button id="new-todo" class="create-button">Todo</button></li>
+         </ul>
+      </header>
+      <main class="document">
+      </main>
+      <footer class="footer">
+         <p>© Copyright by redpandaathome. Allrights reserved.</p>
+      </footer>
    </div>
 </body>
 </html>
