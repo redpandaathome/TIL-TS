@@ -16,11 +16,12 @@ var TodoComponent = /** @class */ (function (_super) {
     __extends(TodoComponent, _super);
     // private readonly element:HTMLElement; 
     function TodoComponent(title, body) {
-        var _this = _super.call(this, "<section class=\"todo\">\n               <h2 class=\"todo__title\"></h2>\n               <input type=\"checkbox\" class=\"todo-checkbox\">TTT\n            </section>") || this;
+        var _this = _super.call(this, "<section class=\"todo\">\n               <h2 class=\"todo__title\"></h2>\n               <input type=\"checkbox\" class=\"todo-checkbox\">\n            </section>") || this;
         var titleElement = _this.element.querySelector('.todo__title');
         titleElement.textContent = title;
         var bodyElement = _this.element.querySelector('.todo-checkbox');
-        bodyElement.textContent = body; // ???? 확인할 것!
+        // bodyElement.textContent= body; // ???? 확인할 것! textContent... insertAdjacentText... innerText innerHTML...ah...
+        bodyElement.insertAdjacentText('afterbegin', body);
         return _this;
     }
     return TodoComponent;
