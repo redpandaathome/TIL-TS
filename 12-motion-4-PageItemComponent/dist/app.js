@@ -7,15 +7,14 @@ var App = /** @class */ (function () {
     function App(appRoot) {
         this.page = new PageComponent();
         this.page.attachTo(appRoot, 'afterbegin');
-        this.image = new ImageComponent('title', 'https://picsum.photos/200');
-        this.image.attachTo(appRoot, 'beforeend');
-        this.note = new NoteComponent('note-title', 'note-body');
-        this.note.attachTo(appRoot, 'beforeend');
-        this.todo = new TodoComponent('todo-title', 'todo-body');
-        this.todo.attachTo(appRoot, 'beforeend');
-        // this.video = new VideoComponent('video-title', "https://www.youtube.com/embed/G7UEUf5KAvI")
-        this.video = new VideoComponent('video-title', "https://www.youtu.be/G7UEUf5KAvI");
-        this.video.attachTo(appRoot, 'beforeend');
+        var image = new ImageComponent('title', 'https://picsum.photos/200');
+        this.page.addChild(image);
+        var note = new NoteComponent('note-title', 'note-body');
+        this.page.addChild(note);
+        var todo = new TodoComponent('todo-title', 'todo-body');
+        this.page.addChild(todo);
+        var video = new VideoComponent('video-title', "https://www.youtu.be/G7UEUf5KAvI");
+        this.page.addChild(video);
     }
     return App;
 }());
