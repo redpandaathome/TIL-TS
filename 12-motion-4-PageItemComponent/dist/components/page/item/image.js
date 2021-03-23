@@ -21,7 +21,7 @@ var ImageComponent = /** @class */ (function (_super) {
         imageElement.src = url;
         imageElement.alt = title;
         var titleElement = _this.element.querySelector('.image__title');
-        titleElement.textContent = title; //☃︎
+        titleElement.insertAdjacentText('afterbegin', title); //☃︎
         return _this;
     }
     return ImageComponent;

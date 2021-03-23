@@ -15,6 +15,6 @@ export class ImageComponent extends BaseComponent<HTMLElement>{
       imageElement.alt=title;
 
       const titleElement = this.element.querySelector('.image__title')! as HTMLHeadingElement;
-      titleElement.textContent= title; //☃︎
+      titleElement.insertAdjacentText('afterbegin', title); //☃︎
    }
 }
