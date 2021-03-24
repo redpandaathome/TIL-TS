@@ -19,9 +19,13 @@ var PageComponent = /** @class */ (function (_super) {
         return _super.call(this, "<ul class=\"page\"></ul>") || this;
     }
     PageComponent.prototype.addChild = function (section) {
+        var _this = this;
         var item = new PageItemComponent();
         item.addChild(section);
         item.attachTo(this.element, 'beforeend');
+        item.setOnClickListener(function () {
+            item.removeFrom(_this.element);
+        });
     };
     return PageComponent;
 }(BaseComponent));
@@ -30,11 +34,19 @@ export { PageComponent };
 var PageItemComponent = /** @class */ (function (_super) {
     __extends(PageItemComponent, _super);
     function PageItemComponent() {
-        return _super.call(this, "<li class=\"page-item\">\n               <section class=\"page-item__body\"></section>\n               <div class=\"page-item__controls\">\n                  <button class=\"close\">x</button>\n               </div>\n            </li>") || this;
+        var _this = _super.call(this, "<li class=\"page-item\">\n               <section class=\"page-item__body\"></section>\n               <div class=\"page-item__controls\">\n                  <button class=\"close\">x</button>\n               </div>\n            </li>") || this;
+        var closeBtn = _this.element.querySelector(".close");
+        closeBtn.onclick = function () {
+            _this.closeListener && _this.closeListener();
+        };
+        return _this;
     }
     PageItemComponent.prototype.addChild = function (child) {
         var container = this.element.querySelector(".page-item__body");
         child.attachTo(container, "afterbegin");
+    };
+    PageItemComponent.prototype.setOnClickListener = function (listener) {
+        this.closeListener = listener;
     };
     return PageItemComponent;
 }(BaseComponent));
