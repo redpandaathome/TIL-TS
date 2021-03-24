@@ -2,7 +2,7 @@ import { ImageComponent } from "./components/page/item/image.js";
 import { NoteComponent } from "./components/page/item/note.js";
 import { TodoComponent } from "./components/page/item/todo.js";
 import { VideoComponent } from "./components/page/item/video.js";
-import { PageComponent, Composable } from "./components/page/page.js";
+import { PageComponent, Composable, PageItemComponent } from "./components/page/page.js";
 import { Component } from "./components/component.js"
 
 class App {
@@ -11,7 +11,7 @@ class App {
 
    // private readonly image: ImageComponent;
    constructor(appRoot: HTMLElement){
-      this.page = new PageComponent();
+      this.page = new PageComponent(PageItemComponent);
       this.page.attachTo(appRoot);
       
       const image = new ImageComponent('https://picsum.photos/600/300','title🌼');
