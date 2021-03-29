@@ -33,6 +33,8 @@ var InputDialog = /** @class */ (function (_super) {
         this.submitListener = listener;
     };
     InputDialog.prototype.addChild = function (child) {
+        var body = this.element.querySelector("#dialog__body");
+        child.attachTo(body);
     };
     return InputDialog;
 }(BaseComponent));
