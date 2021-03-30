@@ -4,11 +4,11 @@ import { TodoComponent } from "./components/page/item/todo.js";
 import { VideoComponent } from "./components/page/item/video.js";
 import { PageComponent, Composable, PageItemComponent } from "./components/page/page.js";
 import { Component } from "./components/component.js"
-import { InputDialog } from "./components/dialog/dialog.js";
+import { InputDialog, MediaData, TextData } from "./components/dialog/dialog.js";
 import { MediaSectionInput } from "./components/input/media-input.js";
 import { TextSectionInput } from "./components/input/text-input.js";
 
-type InputComponentConstructor<T = MediaSectionInput | TextSectionInput> = {
+type InputComponentConstructor<T = (MediaData | TextData) & Component> = {
    new (): T;
 }
 
@@ -47,7 +47,8 @@ class App {
 
    }
 
-   private bindElementToDialog<T extends MediaSectionInput | TextSectionInput>(
+   //🌺 추후 다른 종류의 미디어 인풋을 추가하고 싶을 때 확장성이 올라간다.
+   private bindElementToDialog<T extends (MediaData | TextData) & Component >(
       selector:string, 
       InputComponent: InputComponentConstructor<T>,
       makeSection: (input: T) => Component

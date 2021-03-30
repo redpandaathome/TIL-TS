@@ -4,6 +4,16 @@ import { Composable } from "../page/page.js";
 type OnCloseListener = ()=>void;
 type OnSubmitListener = ()=>void;
 
+//✨
+export interface MediaData {
+   readonly title: string;
+   readonly url: string;
+}
+
+export interface TextData {
+   readonly title: string;
+   readonly body: string;
+}
 
 //composable 구현 - 다양한 타입의 컨텐츠를 추가할 수 있게.
 export class InputDialog extends BaseComponent<HTMLElement> implements Composable {
