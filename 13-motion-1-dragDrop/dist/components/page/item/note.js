@@ -16,7 +16,7 @@ var NoteComponent = /** @class */ (function (_super) {
     __extends(NoteComponent, _super);
     // private readonly element:HTMLElement; 
     function NoteComponent(title, body) {
-        var _this = _super.call(this, "<section class=\"note\">\n               <h2 class=\"note__title\"></h2>\n               <p class=\"note__body\"></p>\n            </section>") || this;
+        var _this = _super.call(this, "<section class=\"note\">\n               <h2 class=\"page-item__title note__title\"></h2>\n               <p class=\"note__body\"></p>\n            </section>") || this;
         var titleElement = _this.element.querySelector('.note__title');
         titleElement.textContent = title;
         var bodyElement = _this.element.querySelector('.note__body');
