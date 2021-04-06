@@ -11,6 +11,24 @@ type SectionContainerConstructor = {
 export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable {
    constructor(private pageItemConstructor: SectionContainerConstructor) {
       super('<ul class="page"></ul>')
+      this.element.addEventListener('dragover', (event: DragEvent)=> {
+         this.onDragOver(event)
+      })
+
+      this.element.addEventListener('drop', (event: DragEvent)=> {
+         this.onDrop(event)
+      })
+   }
+
+   onDragOver(event:DragEvent){
+      event.preventDefault();
+      console.log('onDragOver')
+   }
+
+   onDrop(event:DragEvent){
+      event.preventDefault();
+      console.log('onDrop')
+
    }
 
    addChild(section:Component){
@@ -34,7 +52,7 @@ export class PageItemComponent extends BaseComponent<HTMLLIElement> implements S
    private closeListener?: OnCloseListener; //✨
    constructor(){
       super(
-         `<li class="page-item">
+         `<li draggable="true" class="page-item">
             <section class="page-item__body"></section>
             <div class="page-item__controls">
                <button class="close">&times;</button>
@@ -45,7 +63,25 @@ export class PageItemComponent extends BaseComponent<HTMLLIElement> implements S
       closeBtn.onclick = () => {
          this.closeListener && this.closeListener() //this.closeListener가 있으면 호출
       }
+
+      this.element.addEventListener('dragstart', (event: DragEvent)=> {
+         this.onDragStrat(event)
+      })
+
+      this.element.addEventListener('dragend', (event: DragEvent)=> {
+         this.onDragEnd(event)
+      })
+
    }
+
+   onDragStrat(event: DragEvent) {
+      console.log('dragStart', event)
+   }
+
+   onDragEnd(event: DragEvent) {
+      console.log('dragEnd', event)
+   }
+
    addChild(child:Component){
       const item = this.element.querySelector('.page-item__body')! as HTMLElement;
       child.attachTo(item);
