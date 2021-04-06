@@ -51,7 +51,6 @@ class App {
          })
       })
    
-
       const noteBtn = document.querySelector("#new-note")! as HTMLButtonElement;
       noteBtn.addEventListener('click', ()=>{
          const dialog = new InputDialog();
@@ -68,7 +67,6 @@ class App {
             dialog.removeFrom(dialogRoot)
          })
       })
-
 
       const todoBtn = document.querySelector("#new-todo")! as HTMLButtonElement;
       todoBtn.addEventListener('click', ()=>{
