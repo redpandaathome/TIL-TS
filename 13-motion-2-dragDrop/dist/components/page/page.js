@@ -41,6 +41,10 @@ var PageComponent = /** @class */ (function (_super) {
         item.setOnClickListener(function () {
             item.removeFrom(_this.element);
         });
+        //🌺 4.
+        item.setOnDragStateListener(function (target, state) {
+            console.log(target, state);
+        });
     };
     return PageComponent;
 }(BaseComponent));
@@ -59,13 +63,30 @@ var PageItemComponent = /** @class */ (function (_super) {
         _this.element.addEventListener('dragend', function (event) {
             _this.onDragEnd(event);
         });
+        //🌺2.
+        _this.element.addEventListener('dragenter', function (event) {
+            _this.onDragEnter(event);
+        });
+        _this.element.addEventListener('dragleave', function (event) {
+            _this.onDragLeave(event);
+        });
         return _this;
     }
     PageItemComponent.prototype.onDragStart = function (event) {
-        console.log('dragstart...');
+        this.notifyDragObservers('start');
     };
     PageItemComponent.prototype.onDragEnd = function (event) {
-        console.log('dragend...');
+        this.notifyDragObservers('end');
+    };
+    PageItemComponent.prototype.onDragEnter = function (event) {
+        this.notifyDragObservers('enter');
+    };
+    PageItemComponent.prototype.onDragLeave = function (event) {
+        this.notifyDragObservers('leave');
+    };
+    PageItemComponent.prototype.notifyDragObservers = function (state) {
+        //🌺
+        this.dragStateListener && this.dragStateListener(this, state);
     };
     PageItemComponent.prototype.addChild = function (child) {
         var container = this.element.querySelector(".page-item__body");
@@ -73,6 +94,10 @@ var PageItemComponent = /** @class */ (function (_super) {
     };
     PageItemComponent.prototype.setOnClickListener = function (listener) {
         this.closeListener = listener;
+    };
+    // 🌺 1.진입 포인트. pageItem이 움직일때 캐치할 listener 필요(dagging, over)
+    PageItemComponent.prototype.setOnDragStateListener = function (listener) {
+        this.dragStateListener = listener;
     };
     return PageItemComponent;
 }(BaseComponent));

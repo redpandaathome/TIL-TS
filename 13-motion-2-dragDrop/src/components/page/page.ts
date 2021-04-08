@@ -38,16 +38,25 @@ export class PageComponent extends BaseComponent<HTMLUListElement> {
       item.setOnClickListener(()=>{
          item.removeFrom(this.element);
       })
+      //🌺 4.
+      item.setOnDragStateListener((target: SectionContainer, state: DragState) => {
+         console.log(target, state)
+      })
    }
 }
 type OnCloseListener = ()=>void
+type DragState = 'start' | 'end' | 'enter' | 'leave';
+type OnDragStateListener<T extends Component> = (target:T, state:DragState)=>void
 
 interface SectionContainer extends Composable, Component{
    setOnClickListener(listener:OnCloseListener):void
+   // 🌺 3.
+   setOnDragStateListener(listener:OnDragStateListener<SectionContainer>):void;
 }
 
 export class PageItemComponent extends BaseComponent<HTMLElement> implements SectionContainer{
    private closeListener?:OnCloseListener
+   private dragStateListener?:OnDragStateListener<PageItemComponent>
    constructor(){
       super(`<li draggable=true class="page-item">
                <section class="page-item__body"></section>
@@ -67,13 +76,35 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
       this.element.addEventListener('dragend', (event:DragEvent)=>{
          this.onDragEnd(event)
       })
+
+      //🌺2.
+      this.element.addEventListener('dragenter', (event:DragEvent)=>{
+         this.onDragEnter(event)
+      })
+   
+      this.element.addEventListener('dragleave', (event:DragEvent)=>{
+         this.onDragLeave(event)
+      })
    }
    onDragStart(event:DragEvent){
-      console.log('dragstart...')
+      this.notifyDragObservers('start')
    }
 
    onDragEnd(event:DragEvent){
-      console.log('dragend...')
+      this.notifyDragObservers('end')
+   }
+
+   onDragEnter(event:DragEvent){
+      this.notifyDragObservers('enter')
+   }
+
+   onDragLeave(event:DragEvent){
+      this.notifyDragObservers('leave')
+   }
+
+   notifyDragObservers(state:DragState){
+      //🌺
+      this.dragStateListener && this.dragStateListener(this, state);
    }
 
    addChild(child:Component){
@@ -83,5 +114,10 @@ export class PageItemComponent extends BaseComponent<HTMLElement> implements Sec
 
    setOnClickListener(listener:OnCloseListener){
       this.closeListener = listener
+   }
+
+   // 🌺 1.진입 포인트. pageItem이 움직일때 캐치할 listener 필요(dagging, over)
+   setOnDragStateListener(listener:OnDragStateListener<PageItemComponent>){
+      this.dragStateListener = listener;
    }
 }
