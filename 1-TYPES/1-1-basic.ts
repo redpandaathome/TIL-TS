@@ -7,7 +7,7 @@
    
    /**
     * JS
-    * Primitive: number,string,boolean,bigint, symbol, null, undefined
+    * Primitive: number, string, boolean, bigint, symbol, null, undefined
     * Object: function, array...
     */
 
