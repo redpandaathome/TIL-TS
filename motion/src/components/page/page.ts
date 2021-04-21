@@ -38,8 +38,10 @@ export class PageComponent extends BaseComponent<HTMLUListElement> implements Co
       }
       
       if(this.dragTarget && this.dragTarget !== this.dropTarget){
+         const dropY = event.clientY;
+         const srcElement = this.dragTarget.getBoundingRect();
          this.dragTarget.removeFrom(this.element)
-         this.dropTarget.attach(this.dragTarget, 'beforebegin')
+         this.dropTarget.attach(this.dragTarget, dropY < srcElement.y ? 'beforebegin' : 'afterend')
       }
    }
 
@@ -94,6 +96,7 @@ interface SectionContainer extends Component, Composable {
    setOnCloseListener(listener:OnCloseListener):void
    setOnDragStateListener(listener: OnDragStateListener<SectionContainer>):void;
    muteChildren(state: 'mute'|'unmute'):void;
+   getBoundingRect(): DOMRect;
 }
 
 export class PageItemComponent extends BaseComponent<HTMLLIElement> implements SectionContainer {
@@ -170,5 +173,9 @@ export class PageItemComponent extends BaseComponent<HTMLLIElement> implements S
       } else {
          this.element.classList.remove('mute-children');
       }
+   }
+
+   getBoundingRect(): DOMRect {
+      return this.element.getBoundingClientRect();
    }
 }
