@@ -14,6 +14,10 @@ var BaseComponent = /** @class */ (function () {
         }
         parent.removeChild(this.element);
     };
+    BaseComponent.prototype.attach = function (component, position) {
+        if (position === void 0) { position = 'afterbegin'; }
+        component.attachTo(this.element, position);
+    };
     return BaseComponent;
 }());
 export { BaseComponent };

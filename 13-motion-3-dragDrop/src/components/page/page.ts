@@ -1,123 +1,181 @@
-import { BaseComponent, Component} from '../component.js';
+import { BaseComponent, Component } from "../component.js";
 
 export interface Composable {
-   addChild(child:Component):void; //✨
+  addChild(child: Component): void; //✨
 }
 
 type SectionContainerConstructor = {
-   new ():SectionContainer
-}
+  new (): SectionContainer;
+};
 
 export class PageComponent extends BaseComponent<HTMLUListElement> {
-   constructor(private pageItemConstructor:SectionContainerConstructor){
-      super(`<ul class="page"></ul>`)
-      
-      this.element.addEventListener('dragover', (event:DragEvent)=>{
-         this.onDragOver(event)
-      })
-   
-      this.element.addEventListener('drop', (event:DragEvent)=>{
-         this.onDrop(event)
-      })
+   private dragTarget?: SectionContainer;
+   private dropTarget?: SectionContainer;
+   //🌺3. debug...!
+   private children = new Set<SectionContainer>();
+  constructor(private pageItemConstructor: SectionContainerConstructor) {
+    super(`<ul class="page"></ul>`);
+
+    this.element.addEventListener("dragover", (event: DragEvent) => {
+      this.onDragOver(event);
+    });
+
+    this.element.addEventListener("drop", (event: DragEvent) => {
+      this.onDrop(event);
+    });
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    console.log("dragover...");
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    //🌺 2.
+   //  console.log("dragdrop...");
+   if(!this.dropTarget){
+      return;
    }
 
-   onDragOver(event:DragEvent){
-      event.preventDefault()
-      console.log('dragover...')
+   if(this.dragTarget && this.dragTarget !== this.dropTarget){
+      this.dragTarget.removeFrom(this.element);
+      this.dropTarget.attach(this.dragTarget, 'beforebegin');
    }
+  }
 
-   onDrop(event:DragEvent){
-      event.preventDefault()
-      console.log('dragdrop...')
-   }
+  addChild(section: Component) {
+    const item = new this.pageItemConstructor();
+    item.addChild(section);
+    item.attachTo(this.element, "beforeend");
+    item.setOnClickListener(() => {
+      item.removeFrom(this.element);
+      this.children.delete(item);
+    });
+    this.children.add(item);
+    item.setOnDragStateListener(
+      (target: SectionContainer, state: DragState) => {
+        //🌺 1. 진입!
+        // console.log(target, state)
+        switch (state) {
+          case "start":
+             this.dragTarget = target;
+             //🌺3. debug...!
+             this.updateSection('mute');
+            break;
+          case "stop":
+             this.dragTarget = undefined;
+             this.updateSection('unmute');
+            break;
+          case "enter":
+             console.log('enter', target)
+             this.dropTarget = target;
+            break;
+          case "leave":
+             console.log('leave', target)
+             this.dropTarget = undefined;
+            break;
+          default:
+            throw new Error(`err... unexpected state: ${state}`);
+        }
+      }
+    );
+  }
 
-   addChild(section:Component){
-      const item = new this.pageItemConstructor()
-      item.addChild(section)
-      item.attachTo(this.element, 'beforeend')
-      item.setOnClickListener(()=>{
-         item.removeFrom(this.element);
+  updateSection(state: 'mute' | 'unmute'){
+      this.children.forEach((section:SectionContainer) => {
+         section.muteChildren(state);
       })
-      //🌺 4.
-      item.setOnDragStateListener((target: SectionContainer, state: DragState) => {
-         console.log(target, state)
-      })
-   }
+  }
 }
-type OnCloseListener = ()=>void
-type DragState = 'start' | 'end' | 'enter' | 'leave';
-type OnDragStateListener<T extends Component> = (target:T, state:DragState)=>void
+type OnCloseListener = () => void;
+type DragState = "start" | "stop" | "enter" | "leave";
+type OnDragStateListener<T extends Component> = (
+  target: T,
+  state: DragState
+) => void;
 
-interface SectionContainer extends Composable, Component{
-   setOnClickListener(listener:OnCloseListener):void
-   // 🌺 3.
-   setOnDragStateListener(listener:OnDragStateListener<SectionContainer>):void;
+interface SectionContainer extends Composable, Component {
+  setOnClickListener(listener: OnCloseListener): void;
+  // 🌺 3.
+  setOnDragStateListener(listener: OnDragStateListener<SectionContainer>): void;
+  muteChildren(state: 'mute' | 'unmute'): void;
 }
 
-export class PageItemComponent extends BaseComponent<HTMLElement> implements SectionContainer{
-   private closeListener?:OnCloseListener
-   private dragStateListener?:OnDragStateListener<PageItemComponent>
-   constructor(){
-      super(`<li draggable=true class="page-item">
+export class PageItemComponent
+  extends BaseComponent<HTMLElement>
+  implements SectionContainer {
+  private closeListener?: OnCloseListener;
+  private dragStateListener?: OnDragStateListener<PageItemComponent>;
+  constructor() {
+    super(`<li draggable=true class="page-item">
                <section class="page-item__body"></section>
                <div class="page-item__controls">
                   <button class="close">x</button>
                </div>
-            </li>`)
-      const closeBtn = this.element.querySelector(".close")! as HTMLButtonElement;
-      closeBtn.onclick=()=>{
-         this.closeListener && this.closeListener()
-      }
+            </li>`);
+    const closeBtn = this.element.querySelector(".close")! as HTMLButtonElement;
+    closeBtn.onclick = () => {
+      this.closeListener && this.closeListener();
+    };
 
-      this.element.addEventListener('dragstart', (event:DragEvent)=>{
-         this.onDragStart(event)
-      })
-   
-      this.element.addEventListener('dragend', (event:DragEvent)=>{
-         this.onDragEnd(event)
-      })
+    this.element.addEventListener("dragstart", (event: DragEvent) => {
+      this.onDragStart(event);
+    });
 
-      //🌺2.
-      this.element.addEventListener('dragenter', (event:DragEvent)=>{
-         this.onDragEnter(event)
-      })
-   
-      this.element.addEventListener('dragleave', (event:DragEvent)=>{
-         this.onDragLeave(event)
-      })
-   }
-   onDragStart(event:DragEvent){
-      this.notifyDragObservers('start')
-   }
+    this.element.addEventListener("dragend", (event: DragEvent) => {
+      this.onDragEnd(event);
+    });
 
-   onDragEnd(event:DragEvent){
-      this.notifyDragObservers('end')
-   }
+    this.element.addEventListener("dragenter", (event: DragEvent) => {
+      this.onDragEnter(event);
+    });
 
-   onDragEnter(event:DragEvent){
-      this.notifyDragObservers('enter')
-   }
+    this.element.addEventListener("dragleave", (event: DragEvent) => {
+      this.onDragLeave(event);
+    });
+  }
+  onDragStart(event: DragEvent) {
+    this.notifyDragObservers("start");
+  }
 
-   onDragLeave(event:DragEvent){
-      this.notifyDragObservers('leave')
-   }
+  onDragEnd(event: DragEvent) {
+    this.notifyDragObservers("stop");
+  }
 
-   notifyDragObservers(state:DragState){
-      //🌺
-      this.dragStateListener && this.dragStateListener(this, state);
-   }
+  onDragEnter(event: DragEvent) {
+    this.notifyDragObservers("enter");
+  }
 
-   addChild(child:Component){
-      const container = this.element.querySelector(".page-item__body")! as HTMLElement;
-      child.attachTo(container, "afterbegin");
-   }
+  onDragLeave(event: DragEvent) {
+    this.notifyDragObservers("leave");
+  }
 
-   setOnClickListener(listener:OnCloseListener){
-      this.closeListener = listener
-   }
+  notifyDragObservers(state: DragState) {
+    this.dragStateListener && this.dragStateListener(this, state);
+  }
 
-   // 🌺 1.진입 포인트. pageItem이 움직일때 캐치할 listener 필요(dagging, over)
-   setOnDragStateListener(listener:OnDragStateListener<PageItemComponent>){
-      this.dragStateListener = listener;
-   }
+  addChild(child: Component) {
+    const container = this.element.querySelector(
+      ".page-item__body"
+    )! as HTMLElement;
+    child.attachTo(container, "afterbegin");
+  }
+
+  setOnClickListener(listener: OnCloseListener) {
+    this.closeListener = listener;
+  }
+
+  // 🌺 1.진입 포인트. pageItem이 움직일때 캐치할 listener 필요(dagging, over)
+  setOnDragStateListener(listener: OnDragStateListener<PageItemComponent>) {
+    this.dragStateListener = listener;
+  }
+
+  muteChildren(state: 'mute' | 'unmute'){
+     if (state === 'mute'){
+         this.element.classList.add('mute-children');
+     } else {
+         this.element.classList.remove('mute-children');
+     }
+  }
 }
