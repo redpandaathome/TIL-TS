@@ -1,4 +1,6 @@
 import { BaseComponent, Component } from "../component.js";
+import { Draggable, Droppable } from "../common/type.js"
+import { EnableDragging, EnableHover, EnableDrop } from "../../decorators/draggable.js"
 
 export interface Composable {
    addChild(child:Component):void
@@ -8,29 +10,25 @@ type SectionContainerConstructor = {
    new (): SectionContainer;
 }
 
-export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable {
+@EnableDrop
+export class PageComponent extends BaseComponent<HTMLUListElement> implements Composable, Droppable {
    private children = new Set<SectionContainer>();
    private dragTarget?: SectionContainer;
    private dropTarget?: SectionContainer;
    constructor(private pageItemConstructor: SectionContainerConstructor) {
       super('<ul class="page"></ul>')
-      this.element.addEventListener('dragover', (event: DragEvent)=> {
-         this.onDragOver(event)
-      })
+      // this.element.addEventListener('dragover', (event: DragEvent)=> {
+      //    this.onDragOver(event)
+      // })
 
-      this.element.addEventListener('drop', (event: DragEvent)=> {
-         this.onDrop(event)
-      })
+      // this.element.addEventListener('drop', (event: DragEvent)=> {
+      //    this.onDrop(event)
+      // })
    }
 
-   onDragOver(event:DragEvent){
-      event.preventDefault();
-      console.log('onDragOver')
-   }
+   onDragOver(_:DragEvent): void {}
 
    onDrop(event:DragEvent){
-      event.preventDefault();
-      console.log('onDrop')
       // 위치 바꾸기!
       if(!this.dropTarget){
          //dropTarget이 undefined라면...
@@ -93,7 +91,7 @@ type OnCloseListener = () => void
 type DragState = 'start' | 'stop' | 'enter' | 'leave';
 type OnDragStateListener<T extends Component> = (target: T, state: DragState) => void;
 
-interface SectionContainer extends Component, Composable {
+interface SectionContainer extends Component, Composable, Draggable {
    setOnCloseListener(listener:OnCloseListener):void
    setOnDragStateListener(listener: OnDragStateListener<SectionContainer>):void;
    muteChildren(state: 'mute'|'unmute'):void;
@@ -101,6 +99,8 @@ interface SectionContainer extends Component, Composable {
    onDropped():void;
 }
 
+@EnableDragging
+@EnableHover
 export class PageItemComponent extends BaseComponent<HTMLLIElement> implements SectionContainer {
    private closeListener?: OnCloseListener; //✨
    private dragStateListener?: OnDragStateListener<PageItemComponent>;
@@ -118,21 +118,21 @@ export class PageItemComponent extends BaseComponent<HTMLLIElement> implements S
          this.closeListener && this.closeListener() //this.closeListener가 있으면 호출
       }
 
-      this.element.addEventListener('dragstart', (event: DragEvent)=> {
-         this.onDragStart(event)
-      })
+      // this.element.addEventListener('dragstart', (event: DragEvent)=> {
+      //    this.onDragStart(event)
+      // })
 
-      this.element.addEventListener('dragend', (event: DragEvent)=> {
-         this.onDragEnd(event)
-      })
+      // this.element.addEventListener('dragend', (event: DragEvent)=> {
+      //    this.onDragEnd(event)
+      // })
 
-      this.element.addEventListener('dragenter', (event: DragEvent)=> {
-         this.onDragEnter(event)
-      })
+      // this.element.addEventListener('dragenter', (event: DragEvent)=> {
+      //    this.onDragEnter(event)
+      // })
 
-      this.element.addEventListener('dragleave', (event: DragEvent)=> {
-         this.onDragLeave(event)
-      })
+      // this.element.addEventListener('dragleave', (event: DragEvent)=> {
+      //    this.onDragLeave(event)
+      // })
 
    }
 
